@@ -30,6 +30,10 @@ const productSchema = new mongoose.Schema({
         'Beauty',
         'Toys',
         'Automotive',
+        'Food',
+        'Furniture',
+        'Grocery',
+        'Footwear',
         'Other'
       ],
       message: 'Invalid category'

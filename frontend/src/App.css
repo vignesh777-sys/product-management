@@ -27,7 +27,7 @@ body {
 .text-right { text-align: right; }
 
 /* Spacing */
-.p-4 { padding: 1rem; }
+.p-4 { padding: 0.5rem; }
 .p-6 { padding: 1.5rem; }
 .px-4 { padding-left: 1rem; padding-right: 1rem; }
 .px-6 { padding-left: 1.5rem; padding-right: 1.5rem; }
@@ -263,6 +263,320 @@ body {
 .block { display: block; }
 .inline-flex { display: inline-flex; }
 .hidden { display: none; }
+.no-underline { text-decoration: none;}
 
-/* Custom styles for better UX */
+/* Modal overlay blur */
+.modal-overlay-blur {
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(5px); /* blur the background */
+}
+
+/* Modal blur background */
+.modal-blur-bg {
+  backdrop-filter: blur(5px);
+  background-color: rgba(0,0,0,0.5);
+}
+
+/* Input & textarea text padding */
+.input-text-padding {
+  padding-left: 0.5rem; /* same as pl-2 */
+}
+/* Smooth scale-in animation */
+@keyframes scale-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-scale-in {
+  animation: scale-in 0.25s ease-out forwards;
+}
+
+/* Backdrop blur transition (optional smooth fade) */
+.backdrop-blur-sm {
+  backdrop-filter: blur(4px);
+}
+
+
+/* Modal blur background */
+.modal-blur-bg {
+  backdrop-filter: blur(5px);
+  background-color: rgba(0,0,0,0.5);
+  transition: background 0.3s ease-in-out;
+}
+
+/* Input and textarea padding */
+.input-text-padding {
+  padding-left: 0.75rem; /* space for text inside input */
+}
+
+/* Buttons */
+.button-gradient {
+  background: linear-gradient(to right, #2563eb, #3b82f6);
+  color: white;
+  font-weight: 600;
+  border-radius: 0.5rem;
+  transition: all 0.2s;
+}
+.button-gradient:hover {
+  background: linear-gradient(to right, #1d4ed8, #2563eb);
+}
+
+/* Shadow for professional look */
+.shadow-sm {
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+.shadow-md {
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+.shadow-lg {
+  box-shadow: 0 10px 15px rgba(0,0,0,0.1);
+}
+
+
+
+
+
+/* Form Container */
+.form-container {
+  background: linear-gradient(to bottom right, #f9fafb, #f1f5f9);
+  padding: 24px;
+  border-radius: 16px;
+  box-shadow: inset 0 2px 8px rgba(0,0,0,0.05), 0 6px 16px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Labels */
+.form-label {
+  font-weight: 600;
+  font-size: 14px;
+  color: #374151;
+  margin-bottom: 6px;
+  display: block;
+}
+
+/* Inputs */
+.form-input {
+  height: 48px;
+  padding: 0 12px;
+  border-radius: 10px;
+  border: 1px solid #d1d5db;
+  background: #fff;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+  transition: all 0.2s ease-in-out;
+}
+
+.form-input:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37,99,235,0.2);
+  outline: none;
+}
+
+/* Error */
+.form-input.error {
+  border-color: #ef4444;
+}
+
+.error-text {
+  font-size: 12px;
+  color: #ef4444;
+  margin-top: 4px;
+}
+
+/* Textarea */
+.form-textarea {
+  height: 100px;
+  width: 100%;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid #d1d5db;
+  resize: none;
+  transition: all 0.2s;
+}
+
+.form-textarea:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37,99,235,0.2);
+  outline: none;
+}
+
+/* Buttons */
+.button-group {
+  display: flex;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.btn-cancel {
+  flex: 1;
+  border: 1px solid #d1d5db;
+  background: #f9fafb;
+  color: #374151;
+  font-weight: 500;
+  border-radius: 10px;
+  padding: 12px;
+  transition: all 0.3s;
+}
+
+.btn-cancel:hover {
+  background: #e5e7eb;
+}
+
+.btn-save {
+  flex: 1;
+  background: linear-gradient(to right, #2563eb, #1d4ed8);
+  color: white;
+  font-weight: 600;
+  border-radius: 10px;
+  padding: 12px;
+  transition: all 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-save:hover {
+  background: linear-gradient(to right, #1d4ed8, #1e40af);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(37,99,235,0.3);
+}
+
+/* Smooth page transition */
+.page-transition {
+  animation: fadeSlideIn 0.8s ease-out;
+}
+
+@keyframes fadeSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+/* Smooth page load */
+.page-transition {
+  animation: fadeSlideIn 0.8s ease-out;
+}
+
+@keyframes fadeSlideIn {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+
+
+/* Typewriter for heading */
+.typewriter-heading {
+  display: inline-block;
+  overflow: hidden;
+  white-space: nowrap;
+  animation: typingHeading 1.5s steps(30, end) forwards;
+}
+
+@keyframes typingHeading {
+  from { width: 0 }
+  to { width: 100% }
+}
+
+/* Typewriter for subtitle */
+.typewriter-subtitle {
+  display: inline-block;
+  overflow: hidden;
+  white-space: nowrap;
+  animation: typingSubtitle 2s steps(40, end) forwards;
+  animation-delay: 1.6s; /* starts after heading finishes */
+  opacity: 0;
+}
+
+@keyframes typingSubtitle {
+  from { width: 0; opacity: 1; }
+  to { width: 100%; opacity: 1; }
+}
+
+/* Emoji spin + scale */
+.animate-emoji {
+  display: inline-block;
+  animation: spinScale 1.5s ease-out forwards;
+}
+
+@keyframes spinScale {
+  0% {
+    transform: scale(0) rotate(0deg);
+    opacity: 0;
+  }
+  60% {
+    transform: scale(1.3) rotate(360deg);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1) rotate(360deg);
+    opacity: 1;
+  }
+}
+
+/* Heading fade in */
+.fade-in-heading {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeUp 1s ease-out 1.2s forwards;
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Subtitle fade in */
+.fade-in-subtitle {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeUp 1s ease-out 2s forwards;
+}
+
+/* Button bounce in (and stay visible) */
+.fade-in-btn {
+  opacity: 0;
+  transform: translateY(40px);
+  animation: bounceUp 1s ease-out 3s forwards;
+}
+
+@keyframes bounceUp {
+  0% {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  60% {
+    opacity: 1;
+    transform: translateY(-8px);
+  }
+  80% {
+    transform: translateY(4px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+
+
 .hover\:bg-opacity-75:hover { background-color: rgba(59, 130, 246, 0.75); }

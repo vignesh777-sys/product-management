@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import { productAPI } from '../services/api';
 import Button from '../components/ui/Button';
 import { Plus, Package } from "lucide-react";
@@ -7,6 +8,7 @@ import ProductForm from '../components/ProductForm';
 import SearchAndSort from '../components/SearchAndSort';
 
 export default function Products() {
+  const [allProducts, setAllProducts] = useState([]);
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
@@ -16,29 +18,43 @@ export default function Products() {
   const [categoryFilter, setCategoryFilter] = useState('All Categories');
   const [error, setError] = useState(null);
 
+  // Load all products once from API
   useEffect(() => {
+    const loadProducts = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const response = await productAPI.getAll();
+        setAllProducts(response.data || []);
+      } catch (err) {
+        console.error('Error loading products:', err);
+        setError('Failed to load products. Please try again.');
+      }
+      setLoading(false);
+    };
     loadProducts();
   }, []);
 
-  const loadProducts = async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      const response = await productAPI.search(searchTerm, categoryFilter, 'price', sortOrder);
-      setProducts(response.data || []);
-    } catch (error) {
-      console.error('Error loading products:', error);
-      setError('Failed to load products. Please try again.');
-    }
-    setLoading(false);
-  };
-
-  // Reload products when search, sort, or filter changes
+  // Filter + sort products
   useEffect(() => {
-    if (!loading) {
-      loadProducts();
+    let filtered = [...allProducts];
+    const lowerSearch = searchTerm.toLowerCase().trim();
+    const lowerCategoryFilter = categoryFilter.toLowerCase().trim();
+
+    if (lowerCategoryFilter && lowerCategoryFilter !== 'all categories') {
+      filtered = filtered.filter(p => p.category.toLowerCase().includes(lowerCategoryFilter));
     }
-  }, [searchTerm, sortOrder, categoryFilter]);
+
+    if (lowerSearch) {
+      filtered = filtered.filter(p =>
+        p.name.toLowerCase().includes(lowerSearch) ||
+        p.category.toLowerCase().includes(lowerSearch)
+      );
+    }
+
+    filtered.sort((a, b) => sortOrder === 'asc' ? a.price - b.price : b.price - a.price);
+    setProducts(filtered);
+  }, [allProducts, searchTerm, categoryFilter, sortOrder]);
 
   const handleSaveProduct = async (productData) => {
     try {
@@ -49,9 +65,10 @@ export default function Products() {
       }
       setShowForm(false);
       setEditingProduct(null);
-      loadProducts();
-    } catch (error) {
-      console.error('Error saving product:', error);
+      const response = await productAPI.getAll();
+      setAllProducts(response.data || []);
+    } catch (err) {
+      console.error('Error saving product:', err);
       setError('Failed to save product. Please try again.');
     }
   };
@@ -59,9 +76,9 @@ export default function Products() {
   const handleDeleteProduct = async (productId) => {
     try {
       await productAPI.delete(productId);
-      loadProducts();
-    } catch (error) {
-      console.error('Error deleting product:', error);
+      setAllProducts(prev => prev.filter(p => p._id !== productId));
+    } catch (err) {
+      console.error('Error deleting product:', err);
       setError('Failed to delete product. Please try again.');
     }
   };
@@ -87,8 +104,28 @@ export default function Products() {
     );
   }
 
+  // Framer Motion variants
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: { staggerChildren: 0.15 } // stagger 150ms between cards
+    },
+  };
+
+  const cardVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.4 } },
+  };
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+    <motion.div
+      className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.6 }}
+    >
       <div className="max-w-7xl mx-auto px-4 py-8">
         {/* Header */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
@@ -98,15 +135,15 @@ export default function Products() {
           </div>
           <Button
             onClick={handleAddProduct}
-            className="bg-blue-600 hover:bg-blue-700 shadow-lg hover:shadow-xl transition-all duration-200"
+            className="bg-blue-600 hover:bg-blue-700 shadow-lg cursor-pointer hover:shadow-xl transition-all duration-200"
             size="lg"
           >
-            <Plus className="w-5 h-5 mr-2" />
+            <Plus className="w-5 h-8 mr-2 cursor-pointer" />
             Add Product
           </Button>
         </div>
 
-        {/* Error Message */}
+        {/* Error */}
         {error && (
           <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded mb-6">
             {error}
@@ -139,16 +176,22 @@ export default function Products() {
           </div>
 
           {products.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <motion.div
+              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+              variants={containerVariants}
+              initial="hidden"
+              animate="visible"
+            >
               {products.map((product) => (
-                <ProductCard
-                  key={product._id}
-                  product={product}
-                  onEdit={handleEditProduct}
-                  onDelete={handleDeleteProduct}
-                />
+                <motion.div key={product._id} variants={cardVariants}>
+                  <ProductCard
+                    product={product}
+                    onEdit={handleEditProduct}
+                    onDelete={handleDeleteProduct}
+                  />
+                </motion.div>
               ))}
-            </div>
+            </motion.div>
           ) : (
             <div className="text-center py-16">
               <div className="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center mx-auto mb-4">
@@ -174,7 +217,6 @@ export default function Products() {
           )}
         </div>
 
-        {/* Product Form Modal */}
         <ProductForm
           product={editingProduct}
           onSave={handleSaveProduct}
@@ -185,6 +227,6 @@ export default function Products() {
           isOpen={showForm}
         />
       </div>
-    </div>
+    </motion.div>
   );
 }

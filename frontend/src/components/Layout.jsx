@@ -16,9 +16,9 @@ export default function Layout({ children }) {
         <nav className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="flex items-center justify-between h-20">
             <div className="flex items-center">
-              <Link to="/" className="flex-shrink-0 flex items-center gap-3">
+              <Link to="/" className="flex-shrink-0 flex items-center gap-3 no-underline">
                 <ShoppingBag className="h-10 w-10" />
-                <span className="text-2xl font-bold">Productify</span>
+                <span className="text-2xl font-bold no-underline">Productify</span>
               </Link>
             </div>
             <div className="flex items-center space-x-2">
@@ -28,10 +28,10 @@ export default function Layout({ children }) {
                   <Link
                     key={link.name}
                     to={link.path}
-                    className={`flex items-center gap-2 px-6 py-3 rounded-lg text-base font-semibold transition-all duration-200 ${
+                    className={`flex items-center gap-2 px-6 py-3 rounded-lg text-base font-semibold transition-all duration-200 no-underline ${
                       isActive
-                        ? 'bg-blue-700 text-white shadow-md'
-                        : 'text-blue-100 hover:bg-blue-500 hover:bg-opacity-80 hover:text-white'
+                        ? 'bg-blue-700 text-white p-4 shadow-md'
+                        : 'text-blue-100 hover:bg-blue-500 p-4 hover:bg-opacity-80 hover:text-white'
                     }`}
                   >
                     <link.icon className="w-5 h-5" />

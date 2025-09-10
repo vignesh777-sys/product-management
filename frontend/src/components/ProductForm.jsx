@@ -2,11 +2,11 @@ import React, { useState, useEffect } from 'react';
 import Modal from './ui/Modal';
 import Button from './ui/Button';
 import Input from './ui/Input';
-import { Save, Package } from 'lucide-react';
+import { Save } from 'lucide-react';
 
 const categories = [
   "Electronics", "Clothing", "Books", "Home & Garden", 
-  "Sports", "Beauty", "Toys", "Automotive", "Other"
+  "Sports", "Beauty", "Toys", "Automotive","Food" ,"Furniture","Grocery","Footwear","Other"
 ];
 
 export default function ProductForm({ product, onSave, onCancel, isOpen }) {
@@ -28,59 +28,36 @@ export default function ProductForm({ product, onSave, onCancel, isOpen }) {
         category: product.category || ''
       });
     } else {
-      setFormData({
-        name: '',
-        price: '',
-        description: '',
-        category: ''
-      });
+      setFormData({ name: '', price: '', description: '', category: '' });
     }
     setErrors({});
   }, [product, isOpen]);
 
   const validateForm = () => {
     const newErrors = {};
-    
-    if (!formData.name.trim()) {
-      newErrors.name = 'Product name is required';
-    }
-    
-    if (!formData.price || formData.price <= 0) {
-      newErrors.price = 'Price must be greater than 0';
-    }
-    
-    if (!formData.category) {
-      newErrors.category = 'Category is required';
-    }
-
+    if (!formData.name.trim()) newErrors.name = 'Product name is required';
+    if (!formData.price || formData.price <= 0) newErrors.price = 'Price must be greater than 0';
+    if (!formData.category) newErrors.category = 'Category is required';
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
     if (!validateForm()) return;
-    
+
     setIsSubmitting(true);
-    
     try {
-      await onSave({
-        ...formData,
-        price: parseFloat(formData.price)
-      });
+      await onSave({ id: product?._id, ...formData, price: parseFloat(formData.price) });
     } catch (error) {
       console.error('Error saving product:', error);
     }
-    
     setIsSubmitting(false);
   };
 
   const handleInputChange = (field, value) => {
     setFormData(prev => ({ ...prev, [field]: value }));
-    if (errors[field]) {
-      setErrors(prev => ({ ...prev, [field]: null }));
-    }
+    if (errors[field]) setErrors(prev => ({ ...prev, [field]: null }));
   };
 
   return (
@@ -89,25 +66,24 @@ export default function ProductForm({ product, onSave, onCancel, isOpen }) {
       onClose={onCancel}
       title={product ? 'Edit Product' : 'Add New Product'}
     >
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div className="space-y-2">
-          <label htmlFor="name" className="block text-sm font-medium text-gray-700">
-            Product Name *
-          </label>
+      <form onSubmit={handleSubmit} className="form-container">
+        
+        {/* Product Name */}
+        <div className="form-group">
+          <label htmlFor="name" className="form-label">Product Name *</label>
           <Input
             id="name"
             value={formData.name}
             onChange={(e) => handleInputChange('name', e.target.value)}
             placeholder="Enter product name"
-            className={`${errors.name ? 'border-red-500' : ''} h-4`}
+            className={`form-input ${errors.name ? 'error' : ''}`}
           />
-          {errors.name && <p className="text-red-500 text-xs">{errors.name}</p>}
+          {errors.name && <p className="error-text">{errors.name}</p>}
         </div>
 
-        <div className="space-y-2">
-          <label htmlFor="price" className="block text-sm font-medium text-gray-700">
-            Price *
-          </label>
+        {/* Price */}
+        <div className="form-group">
+          <label htmlFor="price" className="form-label">Price *</label>
           <Input
             id="price"
             type="number"
@@ -116,62 +92,57 @@ export default function ProductForm({ product, onSave, onCancel, isOpen }) {
             value={formData.price}
             onChange={(e) => handleInputChange('price', e.target.value)}
             placeholder="0.00"
-            className={`${errors.price ? 'border-red-500' : ''} h-4 left-3`}
+            className={`form-input ${errors.price ? 'error' : ''}`}
           />
-          {errors.price && <p className="text-red-500 text-xs">{errors.price}</p>}
+          {errors.price && <p className="error-text">{errors.price}</p>}
         </div>
 
-        <div className="space-y-2">
-          <label htmlFor="category" className="block text-sm font-medium text-gray-700">
-            Category *
-          </label>
+        {/* Category */}
+        <div className="form-group">
+          <label htmlFor="category" className="form-label">Category *</label>
           <select
             id="category"
             value={formData.category}
             onChange={(e) => handleInputChange('category', e.target.value)}
-            className={`block w-full px-3 py-2 h-4 border rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 ${
-              errors.category ? 'border-red-500' : 'border-gray-300'
-            }`}
+            className={`form-input ${errors.category ? 'error' : ''}`}
           >
             <option value="">Select a category</option>
             {categories.map((category) => (
-              <option key={category} value={category}>
-                {category}
-              </option>
+              <option key={category} value={category}>{category}</option>
             ))}
           </select>
-          {errors.category && <p className="text-red-500 text-xs">{errors.category}</p>}
+          {errors.category && <p className="error-text">{errors.category}</p>}
         </div>
 
-        <div className="space-y-2">
-          <label htmlFor="description" className="block text-sm font-medium text-gray-700">
-            Description
-          </label>
+        {/* Description */}
+        <div className="form-group">
+          <label htmlFor="description" className="form-label">Description</label>
           <textarea
             id="description"
             value={formData.description}
             onChange={(e) => handleInputChange('description', e.target.value)}
             placeholder="Enter product description (optional)"
-            className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 h-20 resize-none"
+            className="form-textarea"
           />
         </div>
 
-        <div className="flex gap-6 pt-4">
+        {/* Buttons */}
+        <div className="button-group">
           <Button
             type="button"
             variant="outline"
             onClick={onCancel}
-            className="flex-1 cursor-pointer"
+            className="btn-cancel"
             disabled={isSubmitting}
           >
             Cancel
           </Button>
           <Button
             type="submit"
-            className="flex-1 bg-blue-600 hover:bg-blue-700 cursor-pointer"
+            className="btn-save"
             disabled={isSubmitting}
           >
-            <Save className="w-4 h-4 mr-2" />
+            <Save className="w-5 h-5 mr-2 inline-block" />
             {isSubmitting ? 'Saving...' : (product ? 'Update' : 'Save')}
           </Button>
         </div>
